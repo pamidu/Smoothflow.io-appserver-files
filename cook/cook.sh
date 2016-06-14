@@ -6,8 +6,8 @@ echo "Get processengine content"
 cd ../
 
 #copy all WF project files to the engine folder
-cp -r prepare/WF-GO/* engine/
-cp -r prepare/WF-GO/WFGOcommitHistory.txt engine/
+cp -rf prepare/WF-GO/* engine/
+cp -rf prepare/WF-GO/WFGOcommitHistory.txt engine/
 
 #if [ ! -d "bin" ]; then 
 #	mkdir "bin" 
@@ -45,19 +45,19 @@ echo "Moving processengine files completed."
 echo ""
 echo "Starting to move Dependancies"
 
-cp -r prepare/v6engine-deps/* engine/src/
+cp -rf prepare/v6engine-deps/* engine/src/
 
 echo "Moving dependancies files completed."
 echo ""
 echo "Starting to move v6engine files"
 
-cp -r prepare/v6engine/* engine/src/duov6.com/
+cp -rf prepare/v6engine/* engine/src/duov6.com/
 
 echo "Moving v6engine files completed."
 echo ""
 echo "Build processengine begins"
 
-cd engine/src/processengine/engine/
+cd /var/www/html/engine/
 
 if [  -f processengine ]; then
 	rm processengine
