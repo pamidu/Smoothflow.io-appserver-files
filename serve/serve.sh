@@ -14,5 +14,5 @@ echo ""
 
 echo "Starting ProcessEngine service"
 
-cd engine/src/processengine/engine/
+cd /var/www/html/engine/
 ./processengine
