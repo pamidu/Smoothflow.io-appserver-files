@@ -2,26 +2,31 @@
 echo "Starting the cooking process"
 echo "Get processengine content"
 
+#moving out to html from cook folder
 cd ../
-cd engine
 
-if [ ! -d "bin" ]; then 
-	mkdir "bin" 
-else
-	rm -r bin
-	mkdir bin
-fi
-if [ ! -d "pkg" ]; then 
-	mkdir "pkg" 
-else
-	rm -r pkg
-	mkdir pkg
-fi
-if [ ! -d "src" ]; then 
-	mkdir "src" 
-fi
+#copy all WF project files to the engine folder
+cp -r prepare/WF-GO/* engine/
+cp -r prepare/WF-GO/WFGOcommitHistory.txt engine/
 
-cd src/
+#if [ ! -d "bin" ]; then 
+#	mkdir "bin" 
+#else
+#	rm -r bin
+#	mkdir bin
+#fi
+#if [ ! -d "pkg" ]; then 
+#	mkdir "pkg" 
+#else
+#	rm -r pkg
+#	mkdir pkg
+#fi
+#if [ ! -d "src" ]; then 
+#	mkdir "src" 
+#fi
+
+
+cd engine/src/
 
 if [ ! -d "processengine" ]; then 
 	mkdir "processengine" 
@@ -33,8 +38,8 @@ fi
 cd ../
 cd ../
 
-cp -r prepare/WF-GO/src/processengine/* engine/src/processengine/
-cp -r prepare/WF-GO/WFGOcommitHistory.txt engine/src/processengine/
+#cp -r prepare/WF-GO/src/processengine/* engine/src/processengine/
+#cp -r prepare/WF-GO/WFGOcommitHistory.txt engine/src/processengine/
 
 echo "Moving processengine files completed."
 echo ""

@@ -1,6 +1,6 @@
 #!/bin/bash
 echo "Starting to prepare the files required for Smoothflow"
-echo "Branch name:": $1
+echo "Branch name ": $1
 echo ""
 
 username="duobuilduser"
