@@ -41,6 +41,17 @@ cd ../
 #cp -r prepare/WF-GO/src/processengine/* engine/src/processengine/
 #cp -r prepare/WF-GO/WFGOcommitHistory.txt engine/src/processengine/
 
+echo "Moving smoothflow app files"
+echo ""
+echo "Starting to move Smoothflow files"
+
+cp -rf prepare/SmoothFlow.io/* app/
+
+echo ""
+echo "Moving smoothflow app files completed."
+
+echo ""
+
 echo "Moving processengine files completed."
 echo ""
 echo "Starting to move Dependancies"
