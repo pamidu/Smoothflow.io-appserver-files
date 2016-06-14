@@ -5,55 +5,21 @@ echo "Get processengine content"
 #moving out to html from cook folder
 cd ../
 
+echo ""
+echo "Moving processengine files."
 #copy all WF project files to the engine folder
 cp -rf prepare/WF-GO/* engine/
 cp -rf prepare/WF-GO/WFGOcommitHistory.txt engine/
+echo "Moving processengine files completed."
 
-#if [ ! -d "bin" ]; then 
-#	mkdir "bin" 
-#else
-#	rm -r bin
-#	mkdir bin
-#fi
-#if [ ! -d "pkg" ]; then 
-#	mkdir "pkg" 
-#else
-#	rm -r pkg
-#	mkdir pkg
-#fi
-#if [ ! -d "src" ]; then 
-#	mkdir "src" 
-#fi
-
-
-cd engine/src/
-
-if [ ! -d "processengine" ]; then 
-	mkdir "processengine" 
-fi
-if [ ! -d "duov6.com" ]; then 
-	mkdir "duov6.com" 
-fi
-
-cd ../
-cd ../
-
-#cp -r prepare/WF-GO/src/processengine/* engine/src/processengine/
-#cp -r prepare/WF-GO/WFGOcommitHistory.txt engine/src/processengine/
-
-echo "Moving smoothflow app files"
 echo ""
 echo "Starting to move Smoothflow files"
 
 cp -rf prepare/SmoothFlow.io/* app/
 
-echo ""
 echo "Moving smoothflow app files completed."
-
 echo ""
 
-echo "Moving processengine files completed."
-echo ""
 echo "Starting to move Dependancies"
 
 cp -rf prepare/v6engine-deps/* engine/src/
