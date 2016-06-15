@@ -8,27 +8,27 @@ cd ../
 echo ""
 echo "Moving processengine files."
 #copy all WF project files to the engine folder
-cp -rf prepare/WF-GO/* engine/
-cp -rf prepare/WF-GO/WFGOcommitHistory.txt engine/
+yes | cp -rf prepare/WF-GO/* engine/
+yes | cp -rf prepare/WF-GO/WFGOcommitHistory.txt engine/
 echo "Moving processengine files completed."
 
 echo ""
 echo "Starting to move Smoothflow files"
 
-cp -rf prepare/SmoothFlow.io/* app/
+yes | cp -rf prepare/SmoothFlow.io/* app/
 
 echo "Moving smoothflow app files completed."
 echo ""
 
 echo "Starting to move Dependancies"
 
-cp -rf prepare/v6engine-deps/* engine/src/
+yes | cp -rf prepare/v6engine-deps/* engine/src/
 
 echo "Moving dependancies files completed."
 echo ""
 echo "Starting to move v6engine files"
 
-cp -rf prepare/v6engine/* engine/src/duov6.com/
+yes | cp -rf prepare/v6engine/* engine/src/duov6.com/
 
 echo "Moving v6engine files completed."
 echo ""
