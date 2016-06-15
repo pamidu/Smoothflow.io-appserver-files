@@ -66,8 +66,8 @@ class UserAuthorization {
 
         if($authDecoded)
           if(isset($authDecoded->SecurityToken) && isset($authDecoded->UserID)) {
-            setcookie('securityToken', $authDecoded->SecurityToken, time()+86400);
-            setcookie('authData', $authObj, time()+86400);
+            setcookie('securityToken', $authDecoded->SecurityToken, time()+86400, "/");
+            setcookie('authData', $authObj, time()+86400, "/");
             $_SESSION['securityToken'] = $authDecoded->SecurityToken;
             $_SESSION['userObject'] = $authDecoded;
 
