@@ -54,121 +54,121 @@ class UserAuthorization {
             echo '{"Success":false, "Message": "Exceeded the maximum number of login attempts.", "Data": {}}'; return;
         }
 
-    	$fullhost = strtolower($_SERVER['HTTP_HOST']);
-    	$loginObj->Domian = $fullhost;
+        $fullhost = strtolower($_SERVER['HTTP_HOST']);
+        $loginObj->Domian = $fullhost;
 
-    	$loginUrl = "/Login/" . trim($loginObj->Username) . "/" . trim($loginObj->Password) . "/104.197.27.7";
+        $loginUrl = "/Login/" . trim($loginObj->Username) . "/" . trim($loginObj->Password) . "/smoothflow.io";
 
     	// curl request goes here.
         $invoker = new WsInvoker(SVC_AUTH_URL);
         $authObj = $invoker->get($loginUrl);
         $authDecoded = json_decode($authObj);
 
-    	if($authDecoded)
-    		if(isset($authDecoded->SecurityToken) && isset($authDecoded->UserID)) {
-                setcookie('securityToken', $authDecoded->SecurityToken, time()+86400);
-                setcookie('authData', $authObj, time()+86400);
-                $_SESSION['securityToken'] = $authDecoded->SecurityToken;
-                $_SESSION['userObject'] = $authDecoded;
+        if($authDecoded)
+          if(isset($authDecoded->SecurityToken) && isset($authDecoded->UserID)) {
+            setcookie('securityToken', $authDecoded->SecurityToken, time()+86400);
+            setcookie('authData', $authObj, time()+86400);
+            $_SESSION['securityToken'] = $authDecoded->SecurityToken;
+            $_SESSION['userObject'] = $authDecoded;
 
-                echo '{"Success":true, "Message": "You have been successfully logged in", "Data": {"AuthData":' . $authObj . '}}'; return;
-    		}else {
-                $this->hitFailedAttampt($loginObj->Username);
-    			echo '{"Success":false, "Message":"' . $authObj . '", "Data": {}}'; return;
-    		}
-    	else {
+            echo '{"Success":true, "Message": "You have been successfully logged in", "Data": {"AuthData":' . $authObj . '}}'; return;
+        }else {
+            $this->hitFailedAttampt($loginObj->Username);
+            echo '{"Success":false, "Message":"' . $authObj . '", "Data": {}}'; return;
+        }
+        else {
             $this->hitFailedAttampt($loginObj->Username);
             echo '{"Success":false, "Message":"' . $authObj . '", "Data": {}}'; return;   
         }
 
-	}
+    }
 
-	public function UserRegistration() {
-		$regData = Flight::request()->data;
-        $regObj = new UserRegistrationRequest();
-        $regUrl = "/UserRegistation/";
+    public function UserRegistration() {
+      $regData = Flight::request()->data;
+      $regObj = new UserRegistrationRequest();
+      $regUrl = "/UserRegistation/";
 
-        foreach ($regObj as $key => $value) {
-            if(!isset($regData->$key)) {
-                echo '{"Success":false, "Message": "Request payload should contains '. $key .' property.", "Data": {}}'; return;
-            }
-            if(!$regData->$key) {
-                echo '{"Success":false, "Message": "' . $key .'" property is empty or null.", "Data": {}}'; return;
-            }
+      foreach ($regObj as $key => $value) {
+        if(!isset($regData->$key)) {
+            echo '{"Success":false, "Message": "Request payload should contains '. $key .' property.", "Data": {}}'; return;
         }
-
-        DuoWorldCommon::mapToObject($regData, $regObj);
-
-        $isRegistered = $this->isEmailAddressAlreadyRegistered($regObj->EmailAddress);
-        if($isRegistered) {
-            echo '{"Success":false, "Message": "' .$regObj->EmailAddress. ' is already registered.", "Data": {}}'; return;
+        if(!$regData->$key) {
+            echo '{"Success":false, "Message": "' . $key .'" property is empty or null.", "Data": {}}'; return;
         }
+    }
 
-        $regObj->Active = false;
+    DuoWorldCommon::mapToObject($regData, $regObj);
 
-        $invoker = new WsInvoker(SVC_AUTH_URL);
-        $authObj = $invoker->post($regUrl, $regObj);
-        $authDecoded = json_decode($authObj);
+    $isRegistered = $this->isEmailAddressAlreadyRegistered($regObj->EmailAddress);
+    if($isRegistered) {
+        echo '{"Success":false, "Message": "' .$regObj->EmailAddress. ' is already registered.", "Data": {}}'; return;
+    }
 
-        if($authDecoded)
-            if(isset($authDecoded->UserID)) { 
-                $isCreated = $this->createProfile($regObj);
-                if($isCreated) {
-                    echo '{"Success":true, Message": "You have been successfully registed.", "Data": {}}'; return;
-                }else {
-                    echo '{"Success":false, Message": "Error getting while creating the profile.", "Data": {}}'; return;
-                }
+    $regObj->Active = false;
+
+    $invoker = new WsInvoker(SVC_AUTH_URL);
+    $authObj = $invoker->post($regUrl, $regObj);
+    $authDecoded = json_decode($authObj);
+
+    if($authDecoded)
+        if(isset($authDecoded->UserID)) { 
+            $isCreated = $this->createProfile($regObj);
+            if($isCreated) {
+                echo '{"Success":true, Message": "You have been successfully registed.", "Data": {}}'; return;
             }else {
-                echo '{"Success":false, "Message":"' . $authObj . '", "Data": {}}'; return;
+                echo '{"Success":false, Message": "Error getting while creating the profile.", "Data": {}}'; return;
             }
+        }else {
+            echo '{"Success":false, "Message":"' . $authObj . '", "Data": {}}'; return;
+        }
         else {
             echo '{"Success":false, "Message":"' . $authObj . '", "Data": {}}'; return;   
         }
-	}
+    }
 
     private function createProfile($user) {
         $isCreated = false;
         $profile = new UserProfile();
 
         foreach ($profile as $key => $value) {
-           $profile->$key = "";
+         $profile->$key = "";
+     }
+
+     $profile->name = $user->Name;
+     $profile->email = $user->EmailAddress;
+     $profile->bannerPicture = "fromObjectStore";
+     $profile->id = "admin@duosoftware.com";
+
+     $client = ObjectStoreClient::WithNamespace("duosoftware.com", "profile","123");
+     $response = $client->store()->byKeyField("email")->andStore($profile);
+     if(isset($response->IsSuccess)) {
+        if($response->IsSuccess) {
+            $isCreated = true;
         }
-
-        $profile->name = $user->Name;
-        $profile->email = $user->EmailAddress;
-        $profile->bannerPicture = "fromObjectStore";
-        $profile->id = "admin@duosoftware.com";
-
-        $client = ObjectStoreClient::WithNamespace("duosoftware.com", "profile","123");
-        $response = $client->store()->byKeyField("email")->andStore($profile);
-        if(isset($response->IsSuccess)) {
-            if($response->IsSuccess) {
-                $isCreated = true;
-            }
-        }
-
-        return $isCreated;
     }
 
-    private function isEmailAddressAlreadyRegistered($email) {
-        $isRegistered = false;
-        $email = trim($email);
+    return $isCreated;
+}
+
+private function isEmailAddressAlreadyRegistered($email) {
+    $isRegistered = false;
+    $email = trim($email);
 
         //Email validation
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            echo '{"Success":false, "Message": "Email address('. $email .') is not in valid format.", "Data": {}}'; return;
-        }
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        echo '{"Success":false, "Message": "Email address('. $email .') is not in valid format.", "Data": {}}'; return;
+    }
 
         //check requested email address against objectstore.
-        $client = ObjectStoreClient::WithNamespace("duosoftware.com", "profile","123");
-        $response = $client->get()->byKey($email);
-        if(!isset($response->IsSuccess))
+    $client = ObjectStoreClient::WithNamespace("duosoftware.com", "profile","123");
+    $response = $client->get()->byKey($email);
+    if(!isset($response->IsSuccess))
             if($response) // email is already registered.
-                $isRegistered = true;
+        $isRegistered = true;
 
         return $isRegistered;
 
-}
+    }
 
     private function isValidLoginAttampt($username) {
         $isValid = true;
@@ -178,7 +178,7 @@ class UserAuthorization {
                 $isValid = false; 
             }
         }else
-            $_SESSION["loginAttempts"] = $username . ",1";
+        $_SESSION["loginAttempts"] = $username . ",1";
 
         return $isValid;
     }
@@ -192,14 +192,14 @@ class UserAuthorization {
     }
 
 
-	function __construct() {
-		Flight::route("POST /userauthorization/login", function() {
-			$this->Login();
-		});
-        Flight::route("POST /userauthorization/userregistration", function() {
-            $this->UserRegistration();
-        });
-	}
+    function __construct() {
+      Flight::route("POST /userauthorization/login", function() {
+         $this->Login();
+     });
+      Flight::route("POST /userauthorization/userregistration", function() {
+        $this->UserRegistration();
+    });
+  }
 
 }
 
