@@ -9,7 +9,7 @@ else
 fi
 
 #copying files
-cp -rf Smoothflow.io-appserver-files/* /var/www/html/
+yes | cp -R Smoothflow.io-appserver-files/* /var/www/html/
 
 #set permisions to other scripts
 chmod u+x /var/www/html/prepare/./prepare.sh
