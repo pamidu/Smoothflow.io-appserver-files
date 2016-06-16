@@ -15,7 +15,7 @@ echo "Moving processengine files completed."
 echo ""
 echo "Starting to move Smoothflow files"
 
-yes | cp -RT prepare/SmoothFlow.io/* app/
+yes | cp -R prepare/SmoothFlow.io/* app/
 
 echo "Moving smoothflow app files completed."
 echo ""
