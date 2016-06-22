@@ -19,17 +19,17 @@ function createSessionDmian(){
 				echo "cookie not set";
 				$obj=getSession($_COOKIE['securityToken'],$Host);
 				var_dump($obj);
-			    if( isset($obj) && $obj->SecurityToken!=""){
-			    	echo "set....1";
-			    	$_SESSION[$Host]=$obj;
-			    	setcookie("securityToken", $obj->SecurityToken,time()+86400);
-			    	setcookie("authData", json_encode($obj),time()+86400);
-			    	return true;
-			    }
-			    else
-			    {
-			    	return false;
-			    }
+				if( isset($obj) && $obj->SecurityToken!=""){
+					echo "set....1";
+					$_SESSION[$Host]=$obj;
+					setcookie("securityToken", $obj->SecurityToken,time()+86400);
+					setcookie("authData", json_encode($obj),time()+86400);
+					return true;
+				}
+				else
+				{
+					return false;
+				}
 			}else{
 				return true;
 			}
@@ -46,9 +46,9 @@ function createSessionDmian(){
 function getSession($securityToken,$domain){
 	$ch=curl_init();
 	curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-	'securityToken : ""',
-	'X-Apple-Store-Front: 143444,12'
-	));
+		'securityToken : ""',
+		'X-Apple-Store-Front: 143444,12'
+		));
 	if($domain==""){
 		$domain="Nil";
 	}
@@ -62,85 +62,85 @@ function getSession($securityToken,$domain){
 
 
 function getURI(){
-			if(!isset($_COOKIE["securityToken"])){
-				header("Location: s.php?r=index.php");
-				exit();
+	if(!isset($_COOKIE["securityToken"])){
+		header("Location: s.php?r=index.php");
+		exit();
+	}
+	$uri=$GLOBALS['objURI'];
+	$serchfild=strtolower($_SERVER['HTTP_HOST']);
+	$ch=curl_init();
+	curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+		'SecurityToken :'.$_COOKIE['securityToken'],
+		'X-Apple-Store-Front: 143444,12'
+		));
+	curl_setopt($ch, CURLOPT_URL, SVC_AUTH_URL.'/tenant/GetTenants/'.$_COOKIE['securityToken']);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+	$data = curl_exec($ch);
+	$obj = json_decode($data);
+	var_dump($obj);
+	if (isset($obj)){
+		if(count($obj)!=0){
+			setcookie("tenantData", json_encode($obj));
+			$tid=$obj[0]->TenantID;
+			foreach ($obj as &$value) {
+				if($serchfild==strtolower($value->TenantID)){
+					$tid=$serchfild;
+				}
 			}
-			$uri=$GLOBALS['objURI'];
-		    $serchfild=strtolower($_SERVER['HTTP_HOST']);
+			
 			$ch=curl_init();
 			curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-		    'SecurityToken :'.$_COOKIE['securityToken'],
-		    'X-Apple-Store-Front: 143444,12'
-		    ));
-			curl_setopt($ch, CURLOPT_URL, SVC_AUTH_URL.'/tenant/GetTenants/'.$_COOKIE['securityToken']);
-		    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		    $data = curl_exec($ch);
-		    $obj = json_decode($data);
-		    var_dump($obj);
-		    if (isset($obj)){
-		    	if(count($obj)!=0){
-		    		setcookie("tenantData", json_encode($obj));
-		    		$tid=$obj[0]->TenantID;
-		    		foreach ($obj as &$value) {
-    					if($serchfild==strtolower($value->TenantID)){
-    						$tid=$serchfild;
-    					}
-					}
-					
-		    		$ch=curl_init();
-		    		curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-		    		'SecurityToken :'.$_COOKIE['securityToken'],
-		    		'X-Apple-Store-Front: 143444,12'
-		    		));
-		    		curl_setopt($ch, CURLOPT_URL, SVC_AUTH_URL.'/tenant/GetTenant/'.$tid);
-				    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-				    $data = curl_exec($ch);
-				    $obj = json_decode($data);
-				    if(isset($obj))
-				    {
-				    	if($obj->TenantID!=""){
+				'SecurityToken :'.$_COOKIE['securityToken'],
+				'X-Apple-Store-Front: 143444,12'
+				));
+			curl_setopt($ch, CURLOPT_URL, SVC_AUTH_URL.'/tenant/GetTenant/'.$tid);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			$data = curl_exec($ch);
+			$obj = json_decode($data);
+			if(isset($obj))
+			{
+				if($obj->TenantID!=""){
 
-				    		header("Location: http://".$obj->TenantID."/".$obj->Shell."");
-		    				exit();
-		    			}
-		    			else
-		    			{
-		    				header("Location: /payapi/shell.php");
-		    				exit();
-		    			}
-		    		}
-		    		else
-		    		{
-		    				header("Location: payapi/shell.php");
-		    				exit();
-		    		}
+					header("Location: http://".$obj->TenantID."/".$obj->Shell."");
+					exit();
+				}
+				else
+				{
+					header("Location: /payapi/shell.php");
+					exit();
+				}
+			}
+			else
+			{
+				header("Location: payapi/shell.php");
+				exit();
+			}
 
 
-		    		
-		    	}else{
+			
+		}else{
 
-		    		$ch=curl_init();
-		    		curl_setopt($ch, CURLOPT_URL, SVC_AUTH_URL.'/tenant/GetTenant/'.$serchfild);
-				    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-				    $data = curl_exec($ch);
-				    $obj = json_decode($data);
-				    if(isset($obj))
-				    {
-				    	if($obj->TenantID!=""){
-		    				include("notauthorized.php");
-		    			}
-		    			else
-		    			{
-		    				header("Location: app/");
-		    			}
-		    		}
-		    	}	
+			$ch=curl_init();
+			curl_setopt($ch, CURLOPT_URL, SVC_AUTH_URL.'/tenant/GetTenant/'.$serchfild);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			$data = curl_exec($ch);
+			$obj = json_decode($data);
+			if(isset($obj))
+			{
+				if($obj->TenantID!=""){
+					include("notauthorized.php");
+				}
+				else
+				{
+					header("Location: payapi/shell.php");
+				}
+			}
+		}	
 
-		    }else{
+	}else{
 		    	//include("t.php");
-		    }
-		    header("Location: app/");
+	}
+	header("Location: payapi/shell.php");
 }
 
 

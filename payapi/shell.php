@@ -1,6 +1,10 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
 require_once ($_SERVER['DOCUMENT_ROOT'] . "/include/config.php");
+require_once ($_SERVER['DOCUMENT_ROOT'] . "/dwcommon.php");
 require_once(ROOT_PATH . "/include/duoapi/tenantapiproxy.php");
 
 class OtherTenantData {
@@ -16,7 +20,7 @@ $secToken = $_COOKIE["securityToken"];
 $authObj = json_decode($_COOKIE["authData"]);
 $tenantService = new TenantProxy($secToken);
 
-$uriuser = substr($email, 0, strpos($email, "@")) . "." . $mainDomain;
+$uriuser = substr($authObj->Username, 0, strpos($authObj->Username, "@")) . "." . $mainDomain;
 
 if(IsTenantAlreadyRegisterd()){
 	// Tenant already created.	
@@ -30,7 +34,9 @@ if(isset($responseTenant->TenantID)) {
 
 function IsTenantAlreadyRegisterd() {
 	$isRegisted = false;
-
+	$secToken = $_COOKIE["securityToken"];
+	$tenantService = new TenantProxy($secToken);
+	global $uriuser;
 	$response = $tenantService->GetTenant($uriuser);
 	if(isset($response->UserID)) {
 		$isRegisted = true;
@@ -42,24 +48,23 @@ function IsTenantAlreadyRegisterd() {
 function CreateTenant() {
 
 	$authObj = json_decode($_COOKIE["authData"]);
-
+	global  $uriuser;
 	$tenantObj = new CreateTenantRequest();
-	$tenantObj->Shell = "/#/welcome";
+	$tenantObj->Shell = "app/";
 	unset($tenantObj->Statistic);
 	$tenantObj->Private = true;
 	$tenantObj->TenantID = $uriuser;
-	$tenantObj->Name = ""; 
+	$tenantObj->Name = "My Dock"; 
 
 	$otherData = new OtherTenantData();
 	$otherData->Email = $authObj->Email;
 	$otherData->UserName = $authObj->Username;
 	$tenantObj->OtherData = $otherData;
-
+	
+	$secToken = $_COOKIE["securityToken"];
+	$tenantService = new TenantProxy($secToken);
 	$tenantResponse = $tenantService->CreateTenant($tenantObj);
 	return $tenantResponse;
 }
-
-
-
 
 ?>
