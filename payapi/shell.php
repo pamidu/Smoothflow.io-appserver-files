@@ -20,7 +20,7 @@ $secToken = $_COOKIE["securityToken"];
 $authObj = json_decode($_COOKIE["authData"]);
 $tenantService = new TenantProxy($secToken);
 
-$uriuser = substr($email, 0, strpos($email, "@")) . "." . $mainDomain;
+$uriuser = substr($authObj->Username, 0, strpos($authObj->Username, "@")) . "." . $mainDomain;
 
 if(IsTenantAlreadyRegisterd()){
 	// Tenant already created.	
