@@ -1,5 +1,5 @@
 <?php
-$mainDomain="smoothflow.io";
+$mainDomain="dev.smoothflow.io";
 $authURI="http://auth.smoothflow.io:3048/";
 $objURI="http://obj.smoothflow.io:3000/";
 $fullhost=strtolower($_SERVER['HTTP_HOST']);
