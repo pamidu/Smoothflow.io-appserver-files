@@ -15,4 +15,7 @@ echo ""
 echo "Starting ProcessEngine service"
 
 cd /var/www/html/engine/
+
+#give permission to all files to execute
+chmod 777 *
 ./processengine
