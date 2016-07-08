@@ -1,5 +1,5 @@
 <?php
-$mainDomain="192.168.2.11";
+$mainDomain="dev.smoothflow.ayyo";
 $authURI="http://192.168.2.12:3048/";
 $objURI="http://192.168.2.12:3000/";
 $fullhost=strtolower($_SERVER['HTTP_HOST']);
