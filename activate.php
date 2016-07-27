@@ -9,12 +9,12 @@ curl_setopt ($curl, CURLOPT_URL, SVC_AUTH_URL."/UserActivation/".$token);
 $status=curl_exec ($curl);
 curl_close ($curl);
 if($status==true){
-    echo '{"success":true,"message":"Account Activated"}';
-    header("Location: http://".$mainDomain."/platformentry/#/signin?activated=true");
+	echo '{"success":true,"message":"Account Activated"}';
+	header("Location: http://".$mainDomain."/app/");
 }
 else{
-    echo '{"success":false,"message":"Error occured"}';
-    header("Location: http://".$mainDomain."/platformentry/#/signin?activated=false");
+	echo '{"success":false,"message":"Error occured"}';
+	header("Location: http://".$mainDomain."/app/");
 }
 
 ?>
