@@ -1,5 +1,7 @@
 #!/bin/bash
 
+rm -r Smoothflow.io-appserver-files
+
 if [ -d "Smoothflow.io-appserver-files" ]; then 
 	cd Smoothflow.io-appserver-files
 	git pull
