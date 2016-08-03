@@ -57,7 +57,7 @@ class UserAuthorization {
         $fullhost = strtolower($_SERVER['HTTP_HOST']);
         $loginObj->Domian = $fullhost;
 
-        $loginUrl = "/Login/" . trim($loginObj->Username) . "/" . trim($loginObj->Password) . "/". trim($loginObj->Domain);
+        $loginUrl = "/Login/" . trim($loginObj->Username) . "/" . trim($loginObj->Password) . "/smoothflow.io";
 
     	// curl request goes here.
         $invoker = new WsInvoker(SVC_AUTH_URL);
