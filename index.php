@@ -6,17 +6,19 @@ require_once ("include/session.php");
 $fullHost = strtolower($_SERVER['HTTP_HOST']);
 
 switch ($fullHost) {
-    case $mainDomain: // smoothflow.io
+    case $mainDomain: // qa.smoothflow.io
         if(!isset($_COOKIE["securityToken"])){
-			header("location:http://www.smoothflow.io");
+			//header("location:http://www.smoothflow.io");
+            include ("index1.php");	
 		}
         else{
             getURI();
 		}
         break;
-    case "www." . $mainDomain: // www.smoothflow.io
+    case "www." . $mainDomain: // www.qa.smoothflow.io
         if(!isset($_COOKIE["securityToken"])){
-            include ("index1.php");	
+            //include ("index1.php");
+            header("location:http://qa.smoothflow.io");	
 		}else{
 		    getURI();
 		}
