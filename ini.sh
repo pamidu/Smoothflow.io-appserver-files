@@ -7,7 +7,7 @@ if [ -d "Smoothflow.io-appserver-files" ]; then
 	git pull
 	cd ../
 else
-	git clone https://github.com/DuoSoftware/Smoothflow.io-appserver-files.git
+	git clone -b $1 https://github.com/DuoSoftware/Smoothflow.io-appserver-files.git
 fi
 
 #copying files
