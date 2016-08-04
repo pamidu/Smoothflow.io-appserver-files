@@ -6,6 +6,14 @@ require_once ("include/session.php");
 $fullHost = strtolower($_SERVER['HTTP_HOST']);
 
 switch ($fullHost) {
+    case $mainDomain: // smoothflow.io
+        if(!isset($_COOKIE["securityToken"])){
+			header("location:http://qa.smoothflow.io");
+		}
+        else{
+            getURI();
+		}
+        break;
     case "qa." . $mainDomain: // qa.smoothflow.io
         if(!isset($_COOKIE["securityToken"])){
             include ("index1.php");	
